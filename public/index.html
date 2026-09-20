@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>ACVC21 — Ultra Low Latency Calls</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+<div class="bg-glow"></div>
+
+<div class="app">
+  <header class="header">
+    <div class="logo">
+      <div class="logo-mark">◐</div>
+      <span>ACVC21</span>
+      <span style="font-weight:400; opacity:0.5; font-size:11px; margin-left:6px; letter-spacing:0.5px; display:inline-block" class="hide-mobile">P2P • MOBILE • FULLSCREEN</span>
+    </div>
+    <div class="header-right">
+      <div class="pill" style="background:rgba(16,185,129,0.15); border-color:rgba(16,185,129,0.3); color:#10b981"><span>●</span> <span class="hide-mobile">P2P+TURN</span><span class="show-mobile">Live</span></div>
+      <div class="pill"><span class="dot"></span><span id="connStatus">Ready</span></div>
+      <div class="pill" id="latencyPill" style="display:none">
+        <span>⚡</span><span id="latencyVal">-- ms</span>
+      </div>
+      <button class="btn btn-ghost" style="width:auto; padding:7px 10px; font-size:11px; border-radius:10px" onclick="toggleStats()">📊</button>
+    </div>
+  </header>
+
+  <!-- LOBBY -->
+  <div id="lobbyScreen" class="screen active">
+    <div class="lobby-card">
+      <h1>Zero-lag calls. Phone ready.</h1>
+      <p class="sub">📱 Fully responsive • Tap video for fullscreen • PIP on mobile • P2P+TURN • Works on Render</p>
+      
+      <div class="field">
+        <label>Your Name</label>
+        <input id="nameInput" class="input" placeholder="Alex" maxlength="20" autocomplete="name">
+      </div>
+
+      <div class="field">
+        <label>Room ID</label>
+        <div style="display:flex; gap:8px">
+          <input id="roomInput" class="input" placeholder="team-sync" maxlength="30" style="flex:1">
+          <button class="btn btn-ghost" style="width:auto; white-space:nowrap; padding:14px 14px; font-size:13px" onclick="generateRoom()">🎲</button>
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label>Call Type</label>
+          <select id="callType" class="select">
+            <option value="video">🎥 Video + Audio</option>
+            <option value="audio">🎙️ Audio Only</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Quality</label>
+          <select id="quality" class="select">
+            <option value="hd">HD 720p (Balanced)</option>
+            <option value="fhd">Full HD 1080p</option>
+            <option value="sd">SD 480p (Low BW)</option>
+            <option value="low">LD 360p (Ultra Low Lag)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="toggle-row">
+        <span>🔇 Start muted</span>
+        <div id="startMutedToggle" class="switch" onclick="this.classList.toggle('on')"></div>
+      </div>
+
+      <button class="btn btn-primary" onclick="joinRoom()">
+        <span>Join Room</span><span>→</span>
+      </button>
+
+      <div class="hint" style="background:rgba(16,185,129,0.08); border-color:rgba(16,185,129,0.2)">
+        <strong>📱 Mobile Optimized:</strong> On phone, other person's video is fullscreen, yours is draggable PIP (like WhatsApp). Tap any video for fullscreen. Pinch/drag PIP.<br><br>
+        <strong>⛶ Fullscreen:</strong> Tap video or click ⛶ button to fullscreen other person's video. ESC or tap ✕ to exit.<br><br>
+        <strong>🌍 Invite:</strong> <code id="shareUrlPreview" style="font-size:10px; word-break:break-all"></code>
+      </div>
+
+      <div style="margin-top:14px; display:flex; gap:8px; flex-wrap:wrap">
+        <button class="btn btn-ghost" style="font-size:12px; flex:1" onclick="copyLink()">🔗 Copy Link</button>
+        <button class="btn btn-ghost" style="font-size:12px; flex:1" onclick="testDevices()">🎛️ Test</button>
+      </div>
+
+      <div id="devicePreview" style="display:none; margin-top:14px">
+        <video id="testVideo" autoplay muted playsinline style="width:100%; border-radius:12px; background:#000; aspect-ratio:16/9"></video>
+        <div style="margin-top:8px; display:flex; gap:8px">
+          <select id="camSelect" class="select" style="font-size:12px"></select>
+          <select id="micSelect" class="select" style="font-size:12px"></select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CALL -->
+  <div id="callScreen" class="screen">
+    <div id="videoGrid" class="video-grid cols-1"></div>
+
+    <div class="controls">
+      <button id="micBtn" class="ctrl-btn active" title="Mute" onclick="toggleMic()">🎙️</button>
+      <button id="camBtn" class="ctrl-btn active" title="Camera" onclick="toggleCam()">🎥</button>
+      <button class="ctrl-btn" title="Screen Share" onclick="toggleScreen()">🖥️</button>
+      <button class="ctrl-btn" title="Flip Camera" onclick="flipCamera()">🔄</button>
+      <div class="ctrl-sep"></div>
+      <button class="ctrl-btn" title="Fullscreen focused" onclick="toggleFocusMode()">⛶</button>
+      <button class="ctrl-btn" title="Copy Invite" onclick="copyInvite()">🔗</button>
+      <button class="ctrl-btn danger" title="Leave" onclick="leaveCall()">✕</button>
+    </div>
+
+    <!-- Stats Panel -->
+    <div id="statsPanel" class="side-panel">
+      <div class="side-head">
+        <h3>Connection Stats (Live)</h3>
+        <button class="btn btn-ghost" style="width:auto; padding:4px 8px; border-radius:8px" onclick="toggleStats()">✕</button>
+      </div>
+      <div class="side-body">
+        <div style="margin-bottom:16px">
+          <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-dim); margin-bottom:8px">Room</div>
+          <div class="stat-row"><span class="stat-label">ID</span><span class="stat-value" id="sRoomId">-</span></div>
+          <div class="stat-row"><span class="stat-label">Peers</span><span class="stat-value" id="sPeerCount">0</span></div>
+          <div class="stat-row"><span class="stat-label">Mode</span><span class="stat-value">P2P+TURN • Mobile PIP</span></div>
+        </div>
+        <div id="peerStats"></div>
+        <div style="margin-top:16px; font-size:11px; color:var(--text-dim); line-height:1.5">
+          📱 Mobile: Remote fullscreen, local draggable PIP. Tap video → fullscreen. Drag PIP to move.<br>
+          ⛶ Fullscreen: Tap ⛶ on any tile or tap video itself.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toastWrap" class="toast-wrap"></div>
+
+<script src="app.js"></script>
+</body>
+</html>

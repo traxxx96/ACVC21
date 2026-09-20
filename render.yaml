@@ -1,0 +1,13 @@
+# Free HTTPS deployment on Render.com (no domain needed)
+# Gives you https://acvc21-xxxx.onrender.com automatically
+services:
+  - type: web
+    name: acvc21-webrtc
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production

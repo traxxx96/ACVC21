@@ -1,0 +1,24 @@
+{
+  "name": "acvc21-webrtc-call",
+  "version": "2.0.0",
+  "description": "Ultra-low latency WebRTC P2P Call - STUN only, No Domain Needed",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "tunnel": "node tunnel.js",
+    "start:tunnel": "concurrently \"node server.js\" \"node tunnel.js\"",
+    "deploy:render": "echo 'Push to GitHub and connect to Render.com - auto HTTPS'"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.7.4",
+    "cors": "^2.8.5",
+    "localtunnel": "^2.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "concurrently": "^8.2.2"
+  }
+}

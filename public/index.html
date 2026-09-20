@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>ACVC21 — Ultra Low Latency Calls</title>
+<title>ACVC21 — Neumorphism Calls</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
@@ -17,23 +17,22 @@
     <div class="logo">
       <div class="logo-mark">◐</div>
       <span>ACVC21</span>
-      <span style="font-weight:400; opacity:0.5; font-size:11px; margin-left:6px; letter-spacing:0.5px; display:inline-block" class="hide-mobile">P2P • MOBILE • FULLSCREEN</span>
+      <span style="font-weight:500; opacity:0.6; font-size:11px; margin-left:8px; letter-spacing:0.6px; text-transform:uppercase" class="hide-mobile">Neumorphism • Soft UI</span>
     </div>
     <div class="header-right">
-      <div class="pill" style="background:rgba(16,185,129,0.15); border-color:rgba(16,185,129,0.3); color:#10b981"><span>●</span> <span class="hide-mobile">P2P+TURN</span><span class="show-mobile">Live</span></div>
       <div class="pill"><span class="dot"></span><span id="connStatus">Ready</span></div>
       <div class="pill" id="latencyPill" style="display:none">
         <span>⚡</span><span id="latencyVal">-- ms</span>
       </div>
-      <button class="btn btn-ghost" style="width:auto; padding:7px 10px; font-size:11px; border-radius:10px" onclick="toggleStats()">📊</button>
+      <button class="btn btn-ghost" style="width:auto; padding:8px 14px; font-size:11px; border-radius:12px; min-width:0" onclick="toggleStats()">📊 Stats</button>
     </div>
   </header>
 
   <!-- LOBBY -->
   <div id="lobbyScreen" class="screen active">
     <div class="lobby-card">
-      <h1>Zero-lag calls. Phone ready.</h1>
-      <p class="sub">📱 Fully responsive • Tap video for fullscreen • PIP on mobile • P2P+TURN • Works on Render</p>
+      <h1>Soft calls, <span>zero lag.</span></h1>
+      <p class="sub">Neumorphism redesign • Soft extruded UI • Phone responsive • Tap video for fullscreen • P2P+TURN</p>
       
       <div class="field">
         <label>Your Name</label>
@@ -42,9 +41,9 @@
 
       <div class="field">
         <label>Room ID</label>
-        <div style="display:flex; gap:8px">
+        <div style="display:flex; gap:10px">
           <input id="roomInput" class="input" placeholder="team-sync" maxlength="30" style="flex:1">
-          <button class="btn btn-ghost" style="width:auto; white-space:nowrap; padding:14px 14px; font-size:13px" onclick="generateRoom()">🎲</button>
+          <button class="btn btn-ghost" style="width:auto; white-space:nowrap; padding:15px 16px; font-size:13px; border-radius:14px" onclick="generateRoom()">🎲</button>
         </div>
       </div>
 
@@ -76,20 +75,20 @@
         <span>Join Room</span><span>→</span>
       </button>
 
-      <div class="hint" style="background:rgba(16,185,129,0.08); border-color:rgba(16,185,129,0.2)">
-        <strong>📱 Mobile Optimized:</strong> On phone, other person's video is fullscreen, yours is draggable PIP (like WhatsApp). Tap any video for fullscreen. Pinch/drag PIP.<br><br>
-        <strong>⛶ Fullscreen:</strong> Tap video or click ⛶ button to fullscreen other person's video. ESC or tap ✕ to exit.<br><br>
-        <strong>🌍 Invite:</strong> <code id="shareUrlPreview" style="font-size:10px; word-break:break-all"></code>
+      <div class="hint">
+        <strong>🎨 Neumorphism:</strong> Soft shadows, extruded cards, inset inputs, pressed states. Light theme #e6eaf0 with dual shadows.<br><br>
+        <strong>📱 Mobile:</strong> Remote fullscreen, local draggable PIP, tap ⛶ for fullscreen other person.<br><br>
+        <strong>🌍 Invite:</strong> <code id="shareUrlPreview" style="font-size:10px; word-break:break-all; background:rgba(108,91,255,0.08); padding:2px 6px; border-radius:6px"></code>
       </div>
 
-      <div style="margin-top:14px; display:flex; gap:8px; flex-wrap:wrap">
+      <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap">
         <button class="btn btn-ghost" style="font-size:12px; flex:1" onclick="copyLink()">🔗 Copy Link</button>
-        <button class="btn btn-ghost" style="font-size:12px; flex:1" onclick="testDevices()">🎛️ Test</button>
+        <button class="btn btn-ghost" style="font-size:12px; flex:1" onclick="testDevices()">🎛️ Test Devices</button>
       </div>
 
-      <div id="devicePreview" style="display:none; margin-top:14px">
-        <video id="testVideo" autoplay muted playsinline style="width:100%; border-radius:12px; background:#000; aspect-ratio:16/9"></video>
-        <div style="margin-top:8px; display:flex; gap:8px">
+      <div id="devicePreview" style="display:none; margin-top:16px">
+        <video id="testVideo" autoplay muted playsinline style="width:100%; border-radius:20px; background:#d6dae3; aspect-ratio:16/9; box-shadow: var(--shadow-flat);"></video>
+        <div style="margin-top:12px; display:flex; gap:10px">
           <select id="camSelect" class="select" style="font-size:12px"></select>
           <select id="micSelect" class="select" style="font-size:12px"></select>
         </div>
@@ -107,7 +106,7 @@
       <button class="ctrl-btn" title="Screen Share" onclick="toggleScreen()">🖥️</button>
       <button class="ctrl-btn" title="Flip Camera" onclick="flipCamera()">🔄</button>
       <div class="ctrl-sep"></div>
-      <button class="ctrl-btn" title="Fullscreen focused" onclick="toggleFocusMode()">⛶</button>
+      <button class="ctrl-btn" title="Focus other person" onclick="toggleFocusMode()">⛶</button>
       <button class="ctrl-btn" title="Copy Invite" onclick="copyInvite()">🔗</button>
       <button class="ctrl-btn danger" title="Leave" onclick="leaveCall()">✕</button>
     </div>
@@ -115,20 +114,21 @@
     <!-- Stats Panel -->
     <div id="statsPanel" class="side-panel">
       <div class="side-head">
-        <h3>Connection Stats (Live)</h3>
-        <button class="btn btn-ghost" style="width:auto; padding:4px 8px; border-radius:8px" onclick="toggleStats()">✕</button>
+        <h3>Connection Stats</h3>
+        <button class="btn btn-ghost" style="width:auto; padding:6px 12px; border-radius:10px; font-size:12px" onclick="toggleStats()">✕</button>
       </div>
       <div class="side-body">
-        <div style="margin-bottom:16px">
-          <div style="font-size:11px; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-dim); margin-bottom:8px">Room</div>
+        <div style="margin-bottom:18px">
+          <div style="font-size:10px; text-transform:uppercase; letter-spacing:0.8px; color:var(--text-dim); margin-bottom:10px; font-weight:700">Room</div>
           <div class="stat-row"><span class="stat-label">ID</span><span class="stat-value" id="sRoomId">-</span></div>
           <div class="stat-row"><span class="stat-label">Peers</span><span class="stat-value" id="sPeerCount">0</span></div>
-          <div class="stat-row"><span class="stat-label">Mode</span><span class="stat-value">P2P+TURN • Mobile PIP</span></div>
+          <div class="stat-row"><span class="stat-label">Design</span><span class="stat-value">Neumorphism Soft UI</span></div>
         </div>
         <div id="peerStats"></div>
-        <div style="margin-top:16px; font-size:11px; color:var(--text-dim); line-height:1.5">
-          📱 Mobile: Remote fullscreen, local draggable PIP. Tap video → fullscreen. Drag PIP to move.<br>
-          ⛶ Fullscreen: Tap ⛶ on any tile or tap video itself.
+        <div style="margin-top:18px; font-size:11px; color:var(--text-dim); line-height:1.6; padding:12px; background:var(--bg); border-radius:14px; box-shadow:var(--shadow-inset-dark);">
+          🎨 Neumorphism: #e6eaf0 background, dual shadows (light #fff, dark #c8cdd6), extruded cards, inset inputs.<br><br>
+          📱 Mobile: Remote fullscreen, local PIP draggable, tap video → fullscreen other person.<br>
+          ⛶ Fullscreen: Tap ⛶ or double-tap video.
         </div>
       </div>
     </div>
